@@ -56,5 +56,3 @@ pipeline {
 
 
 
-
-//ini jenkin
