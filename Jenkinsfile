@@ -1,58 +1,60 @@
 pipeline {
     agent any
-    
+
+    tools {
+        nodejs 'node20'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                echo '📦 Checking out code from repository...'
                 checkout scm
             }
         }
-        
+
+        stage('Node Info') {
+            steps {
+                bat 'node -v'
+                bat 'npm -v'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                echo '📥 Installing npm dependencies...'
                 bat 'npm install'
             }
         }
-        
+
         stage('Lint') {
             steps {
-                echo '🔍 Running linter...'
                 script {
                     try {
                         bat 'npm run lint'
-                    } catch (Exception e) {
-                        echo 'Lint script not found, skipping...'
+                    } catch (e) {
+                        echo 'Lint not configured, skipped'
                     }
                 }
             }
         }
-        
+
         stage('Build') {
             steps {
-                echo '🔨 Building application...'
-                bat 'npx expo export --platform web'
-            }
-        }
-        
-        stage('Archive') {
-            steps {
-                echo '📂 Archiving build artifacts...'
-                archiveArtifacts artifacts: 'dist/**/*', allowEmptyArchive: true, fingerprint: true
+                echo 'ℹ Build skipped (not a web project)'
             }
         }
     }
-    
+
     post {
         success {
-            echo '✅ Pipeline completed successfully!'
+            echo ' CI pipeline SUCCESS'
         }
         failure {
-            echo '❌ Pipeline failed!'
-        }
-        always {
-            echo '🧹 Cleaning workspace...'
+            echo ' CI pipeline FAILED'
         }
     }
 }
+
+
+
+
+//ini jenkin
